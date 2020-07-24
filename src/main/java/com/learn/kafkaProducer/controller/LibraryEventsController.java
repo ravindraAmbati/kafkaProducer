@@ -2,6 +2,7 @@ package com.learn.kafkaProducer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.learn.kafkaProducer.domain.LibraryEvent;
+import com.learn.kafkaProducer.domain.LibraryEventType;
 import com.learn.kafkaProducer.producer.LibraryEventKafkaProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class LibraryEventsController {
     @PostMapping("/create/libraryEvent")
     public ResponseEntity<LibraryEvent> createLibraryEvent(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
         log.info("###Before message sent###");
+        libraryEvent.setType(LibraryEventType.NEW);
         libraryEventKafkaProducer.sendLibraryEvents(libraryEvent);
         log.info("###After message sent and it should be called after success message###");
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
@@ -31,6 +33,7 @@ public class LibraryEventsController {
     @PostMapping("/create/libraryEvent/waitForResponse")
     public ResponseEntity<LibraryEvent> createLibraryEventSynchronous(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
         log.info("###Before message sent###");
+        libraryEvent.setType(LibraryEventType.NEW);
         SendResult<Integer, String> sendResult = libraryEventKafkaProducer.sendLibraryEventsSynchronous(libraryEvent);
         log.info("sendResult:{}", sendResult);
         log.info("###After message sent and it should be called after success message###");
@@ -40,6 +43,7 @@ public class LibraryEventsController {
     @PostMapping("/create/libraryEvent/topic")
     public ResponseEntity<LibraryEvent> createLibraryEventForTopic(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
         log.info("###Before message sent###");
+        libraryEvent.setType(LibraryEventType.NEW);
         libraryEventKafkaProducer.sendLibraryEventsForTopic(libraryEvent);
         log.info("###After message sent and it should be called after success message###");
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
@@ -48,6 +52,7 @@ public class LibraryEventsController {
     @PutMapping("/update/libraryEvent")
     public ResponseEntity<LibraryEvent> updateLibraryEvent(@RequestBody LibraryEvent libraryEvent) {
         //todo: invoke kafka producer
+        libraryEvent.setType(LibraryEventType.UPDATE);
         return ResponseEntity.status(HttpStatus.OK).body(libraryEvent);
     }
 }
