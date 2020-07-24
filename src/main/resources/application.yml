@@ -6,7 +6,7 @@ spring:
   profiles: local
   kafka:
     template:
-      default-topic: deafult-kafka-topic
+      default-topic: deafult-kafka-topic-5
     producer:
       bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
       key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
