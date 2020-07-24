@@ -37,6 +37,14 @@ public class LibraryEventsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
 
+    @PostMapping("/create/libraryEvent/topic")
+    public ResponseEntity<LibraryEvent> createLibraryEventForTopic(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
+        log.info("###Before message sent###");
+        libraryEventKafkaProducer.sendLibraryEventsForTopic(libraryEvent);
+        log.info("###After message sent and it should be called after success message###");
+        return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
+    }
+
     @PutMapping("/update/libraryEvent")
     public ResponseEntity<LibraryEvent> updateLibraryEvent(@RequestBody LibraryEvent libraryEvent) {
         //todo: invoke kafka producer
