@@ -10,23 +10,10 @@ import org.springframework.kafka.config.TopicBuilder;
 @Profile("local")
 public class AutoKafkaTopicCreationConfig {
 
-    private static final String DEFAULT_KAFKA_TOPIC = "default-kafka-topic";
-
     @Bean
     public NewTopic createKafkaTopic() {
         return TopicBuilder
-                .name(DEFAULT_KAFKA_TOPIC)
-                .partitions(3)
-                .build();
-    }
-
-    @Bean
-    public NewTopic createKafkaTopic(String topic) {
-        if (null == topic || topic.length() < 1 || "".equals(topic.trim())) {
-            return createKafkaTopic();
-        }
-        return TopicBuilder
-                .name(topic)
+                .name("library-events-topic")
                 .partitions(3)
                 .build();
     }
