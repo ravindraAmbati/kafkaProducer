@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learn.kafkaProducer.domain.LibraryEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.Header;
+import org.apache.kafka.common.header.internals.RecordHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -82,11 +85,13 @@ public class LibraryEventKafkaProducer {
     }
 
     private ProducerRecord<Integer, String> buildProducerRecord(String topic, Integer key, String value) {
-        return new ProducerRecord<>(topic, null, key, value, null);
+
+        List<Header> headers = List.of(new RecordHeader("library-event", "book-barcode-reading".getBytes()));
+        return new ProducerRecord<>(topic, null, key, value, headers);
     }
 
     private void handleSuccess(Integer key, String value, SendResult<Integer, String> result) {
-        log.info("Message sent successfully | key: {} | value: {} | topic: {} | partition: {} | offSet: {}", key, value, result.getProducerRecord().topic(), result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
+        log.info("Message sent successfully | key: {} | value: {} | topic: {} | header: {} | partition: {} | offSet: {}", key, value, result.getProducerRecord().topic(), result.getProducerRecord().headers().toString(), result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
     }
 
     private void handleFailure(Integer key, String value, Throwable ex) {
