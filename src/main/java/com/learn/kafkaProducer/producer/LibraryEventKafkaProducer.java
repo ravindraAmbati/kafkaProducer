@@ -8,6 +8,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,8 @@ public class LibraryEventKafkaProducer {
     @Autowired
     ObjectMapper objectMapper;
 
-    private static final String topic = "library-events-topic-9";
+    @Value("${spring.local.kafka.topic}")
+    private String kafkaTopic;
 
     public void sendLibraryEvents(LibraryEvent libraryEvent) throws JsonProcessingException {
 
@@ -69,7 +71,7 @@ public class LibraryEventKafkaProducer {
         Integer key = libraryEvent.getId();
         String value = objectMapper.writeValueAsString(libraryEvent);
 
-        ProducerRecord<Integer, String> producerRecord = buildProducerRecord(topic, key, value);
+        ProducerRecord<Integer, String> producerRecord = buildProducerRecord(kafkaTopic, key, value);
         ListenableFuture<SendResult<Integer, String>> listenableFuture = kafkaTemplate.send(producerRecord);
         listenableFuture.addCallback(new ListenableFutureCallback<>() {
             @Override

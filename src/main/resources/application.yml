@@ -4,9 +4,12 @@ spring:
 ---
 spring:
   profiles: local
+  local:
+    kafka:
+      topic: local-kafka-topic
   kafka:
     template:
-      default-topic: deafult-kafka-topic-5
+      default-topic: default-kafka-topic
     producer:
       bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
       key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
