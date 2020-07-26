@@ -15,7 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -64,13 +64,12 @@ public class LibraryEventsControllerUnitTest {
         objectMapper = null;
         libraryEventJson = null;
         libraryEventKafkaProducer = null;
-
     }
 
     @Test
     void createLibraryEvent() throws Exception {
 
-        doNothing().when(libraryEventKafkaProducer).sendLibraryEvents(libraryEvent);
+        when(libraryEventKafkaProducer.sendLibraryEvents(libraryEvent)).thenReturn(null);
         mockMvc.perform(
                 post("/create/libraryEvent").content(libraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
@@ -81,7 +80,7 @@ public class LibraryEventsControllerUnitTest {
     @Test
     void createLibraryEventSynchronous() throws Exception {
 
-        doNothing().when(libraryEventKafkaProducer).sendLibraryEvents(libraryEvent);
+        when(libraryEventKafkaProducer.sendLibraryEvents(libraryEvent)).thenReturn(null);
         mockMvc.perform(
                 post("/create/libraryEvent/waitForResponse").content(libraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
@@ -92,7 +91,7 @@ public class LibraryEventsControllerUnitTest {
     @Test
     void createLibraryEventForTopic() throws Exception {
 
-        doNothing().when(libraryEventKafkaProducer).sendLibraryEvents(libraryEvent);
+        when(libraryEventKafkaProducer.sendLibraryEvents(libraryEvent)).thenReturn(null);
         mockMvc.perform(
                 post("/create/libraryEvent/topic").content(libraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
@@ -103,7 +102,7 @@ public class LibraryEventsControllerUnitTest {
     @Test
     void updateLibraryEvent() throws Exception {
 
-        doNothing().when(libraryEventKafkaProducer).sendLibraryEvents(libraryEvent);
+        when(libraryEventKafkaProducer.sendLibraryEvents(libraryEvent)).thenReturn(null);
         mockMvc.perform(
                 put("/update/libraryEvent").content(libraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(

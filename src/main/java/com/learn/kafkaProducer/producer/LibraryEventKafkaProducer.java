@@ -31,9 +31,9 @@ public class LibraryEventKafkaProducer {
     ObjectMapper objectMapper;
 
     @Value("${spring.local.kafka.topic}")
-    private String kafkaTopic;
+    String kafkaTopic;
 
-    public void sendLibraryEvents(LibraryEvent libraryEvent) throws JsonProcessingException {
+    public ListenableFuture<SendResult<Integer, String>> sendLibraryEvents(LibraryEvent libraryEvent) throws JsonProcessingException {
 
         Integer key = libraryEvent.getId();
         String value = objectMapper.writeValueAsString(libraryEvent);
@@ -50,6 +50,7 @@ public class LibraryEventKafkaProducer {
                 handleSuccess(key, value, result);
             }
         });
+        return listenableFuture;
     }
 
     public SendResult<Integer, String> sendLibraryEventsSynchronous(LibraryEvent libraryEvent) throws JsonProcessingException {
@@ -66,7 +67,7 @@ public class LibraryEventKafkaProducer {
         return sendResult;
     }
 
-    public void sendLibraryEventsForTopic(LibraryEvent libraryEvent) throws JsonProcessingException {
+    public ListenableFuture<SendResult<Integer, String>> sendLibraryEventsForTopic(LibraryEvent libraryEvent) throws JsonProcessingException {
 
         Integer key = libraryEvent.getId();
         String value = objectMapper.writeValueAsString(libraryEvent);
@@ -84,9 +85,10 @@ public class LibraryEventKafkaProducer {
                 handleSuccess(key, value, result);
             }
         });
+        return listenableFuture;
     }
 
-    private ProducerRecord<Integer, String> buildProducerRecord(String topic, Integer key, String value) {
+    ProducerRecord<Integer, String> buildProducerRecord(String topic, Integer key, String value) {
 
         List<Header> headers = List.of(new RecordHeader("library-event", "book-barcode-reading".getBytes()));
         return new ProducerRecord<>(topic, null, key, value, headers);
