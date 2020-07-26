@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @Slf4j
 public class LibraryEventsController {
@@ -22,7 +24,7 @@ public class LibraryEventsController {
     LibraryEventKafkaProducer libraryEventKafkaProducer;
 
     @PostMapping("/create/libraryEvent")
-    public ResponseEntity<LibraryEvent> createLibraryEvent(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
+    public ResponseEntity<LibraryEvent> createLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
         log.info("###Before message sent###");
         libraryEvent.setType(LibraryEventType.NEW);
         libraryEventKafkaProducer.sendLibraryEvents(libraryEvent);
@@ -31,7 +33,7 @@ public class LibraryEventsController {
     }
 
     @PostMapping("/create/libraryEvent/waitForResponse")
-    public ResponseEntity<LibraryEvent> createLibraryEventSynchronous(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
+    public ResponseEntity<LibraryEvent> createLibraryEventSynchronous(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
         log.info("###Before message sent###");
         libraryEvent.setType(LibraryEventType.NEW);
         SendResult<Integer, String> sendResult = libraryEventKafkaProducer.sendLibraryEventsSynchronous(libraryEvent);
@@ -41,7 +43,7 @@ public class LibraryEventsController {
     }
 
     @PostMapping("/create/libraryEvent/topic")
-    public ResponseEntity<LibraryEvent> createLibraryEventForTopic(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
+    public ResponseEntity<LibraryEvent> createLibraryEventForTopic(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
         log.info("###Before message sent###");
         libraryEvent.setType(LibraryEventType.NEW);
         libraryEventKafkaProducer.sendLibraryEventsForTopic(libraryEvent);
@@ -50,7 +52,7 @@ public class LibraryEventsController {
     }
 
     @PutMapping("/update/libraryEvent")
-    public ResponseEntity<LibraryEvent> updateLibraryEvent(@RequestBody LibraryEvent libraryEvent) {
+    public ResponseEntity<LibraryEvent> updateLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) {
         //todo: invoke kafka producer
         libraryEvent.setType(LibraryEventType.UPDATE);
         return ResponseEntity.status(HttpStatus.OK).body(libraryEvent);
