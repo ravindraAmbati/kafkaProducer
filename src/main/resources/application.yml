@@ -6,10 +6,10 @@ spring:
   profiles: local
   local:
     kafka:
-      topic: local-kafka-topic
+      topic: local-library-events
   kafka:
     template:
-      default-topic: default-kafka-topic
+      default-topic: default-library-events
     producer:
       bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
       key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
