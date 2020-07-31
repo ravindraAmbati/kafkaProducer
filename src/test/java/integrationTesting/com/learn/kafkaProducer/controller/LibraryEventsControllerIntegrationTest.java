@@ -24,12 +24,12 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EmbeddedKafka(topics = {"${spring.kafka.template.default-topic}", "${spring.local.kafka.topic}"}, partitions = 3)
-//@EmbeddedKafka
 @TestPropertySource(properties =
         {
                 "spring.kafka.producer.bootstrap-servers=${spring.embedded.kafka.brokers}",
@@ -44,6 +44,7 @@ public class LibraryEventsControllerIntegrationTest {
     private LibraryEvent libraryEvent;
     private Book book;
     private ResponseEntity<LibraryEvent> actualResponseEntity;
+    private ResponseEntity<?> actualRawResponseEntity;
     private HttpHeaders httpHeaders;
     private Consumer<Integer, String> consumer;
     @Autowired
@@ -85,6 +86,7 @@ public class LibraryEventsControllerIntegrationTest {
         config = null;
         defaultKafkaTopic = null;
         kafkaTopic = null;
+        actualRawResponseEntity = null;
     }
 
     @Test
@@ -157,9 +159,10 @@ public class LibraryEventsControllerIntegrationTest {
     }
 
     @Test
-    void updateLibraryEvent() throws InterruptedException {
+    @Timeout(5)
+    void updateLibraryEvent() {
         LibraryEvent libraryEvent = LibraryEvent.builder()
-                .id(null)
+                .id(123)
                 .type(LibraryEventType.UPDATE)
                 .book(book)
                 .build();
@@ -174,7 +177,27 @@ public class LibraryEventsControllerIntegrationTest {
         assertEquals(expectedResponseEntity.getStatusCodeValue(), actualResponseEntity.getStatusCodeValue());
         assertEquals(expectedResponseEntity.getBody(), actualResponseEntity.getBody());
         assertEquals(expectedResponseEntity.getHeaders().getContentType(), actualResponseEntity.getHeaders().getContentType());
-        //todo: invoke kafka producer
-//        assertNotNull(KafkaTestUtils.getSingleRecord(consumer, defaultKafkaTopic).value());
+        assertNotNull(KafkaTestUtils.getSingleRecord(consumer, defaultKafkaTopic).value());
+    }
+
+    @Test
+    @Timeout(5)
+    void updateLibraryEvent_nullId() {
+        LibraryEvent libraryEvent = LibraryEvent.builder()
+                .id(null)
+                .type(LibraryEventType.UPDATE)
+                .book(book)
+                .build();
+
+        ResponseEntity<?> expectedResponseEntity = new ResponseEntity<>("Library Event Id shouldn't be null", httpHeaders, HttpStatus.BAD_REQUEST);
+        //given
+        requestEntity = new RequestEntity<>(libraryEvent, HttpMethod.PUT, URI.create("/update/libraryEvent"));
+        //when
+        actualRawResponseEntity = testRestTemplate.exchange(requestEntity, String.class);
+        //then
+        assertEquals(expectedResponseEntity.getStatusCode(), actualRawResponseEntity.getStatusCode());
+        assertEquals(expectedResponseEntity.getStatusCodeValue(), actualRawResponseEntity.getStatusCodeValue());
+        assertEquals(expectedResponseEntity.getBody(), actualRawResponseEntity.getBody());
+        assertEquals("text/plain;charset=UTF-8", Objects.requireNonNull(actualRawResponseEntity.getHeaders().getContentType()).toString());
     }
 }
