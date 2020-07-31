@@ -100,9 +100,24 @@ public class LibraryEventsControllerUnitTest {
     }
 
     @Test
+    void updateLibraryEvent_null() throws Exception {
+
+        mockMvc.perform(
+                put("/update/libraryEvent").content(libraryEventJson).contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                status().isBadRequest()
+        ).andExpect(content().string("Library Event Id shouldn't be null"));
+    }
+
+    @Test
     void updateLibraryEvent() throws Exception {
 
-        when(libraryEventKafkaProducer.sendLibraryEvents(libraryEvent)).thenReturn(null);
+        libraryEvent = LibraryEvent.builder()
+                .id(999)
+                .book(book)
+                .build();
+        libraryEventJson = objectMapper.writeValueAsString(libraryEvent);
+        when(libraryEventKafkaProducer.sendLibraryEventsSynchronous(libraryEvent)).thenReturn(null);
         mockMvc.perform(
                 put("/update/libraryEvent").content(libraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
