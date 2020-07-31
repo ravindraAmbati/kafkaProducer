@@ -64,6 +64,8 @@ public class LibraryEventKafkaProducer {
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             handleFailure(key, value, e.getCause());
         }
+        assert sendResult != null;
+        handleSuccess(key, value, sendResult);
         return sendResult;
     }
 
