@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 public class Book {
 
     @NotNull
-    private Integer id;
+    private Integer bookId;
     @NotBlank
     private String name;
     @NotBlank

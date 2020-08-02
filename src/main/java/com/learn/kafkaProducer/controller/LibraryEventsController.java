@@ -26,7 +26,7 @@ public class LibraryEventsController {
     @PostMapping("/create/libraryEvent")
     public ResponseEntity<LibraryEvent> createLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
         log.info("###Before message sent###");
-        libraryEvent.setType(LibraryEventType.NEW);
+        libraryEvent.setLibraryEventType(LibraryEventType.NEW);
         libraryEventKafkaProducer.sendLibraryEvents(libraryEvent);
         log.info("###After message sent and it should be called after success message###");
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
@@ -35,7 +35,7 @@ public class LibraryEventsController {
     @PostMapping("/create/libraryEvent/waitForResponse")
     public ResponseEntity<LibraryEvent> createLibraryEventSynchronous(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
         log.info("###Before message sent###");
-        libraryEvent.setType(LibraryEventType.NEW);
+        libraryEvent.setLibraryEventType(LibraryEventType.NEW);
         SendResult<Integer, String> sendResult = libraryEventKafkaProducer.sendLibraryEventsSynchronous(libraryEvent);
         log.info("sendResult:{}", sendResult);
         log.info("###After message sent and it should be called after success message###");
@@ -45,7 +45,7 @@ public class LibraryEventsController {
     @PostMapping("/create/libraryEvent/topic")
     public ResponseEntity<LibraryEvent> createLibraryEventForTopic(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
         log.info("###Before message sent###");
-        libraryEvent.setType(LibraryEventType.NEW);
+        libraryEvent.setLibraryEventType(LibraryEventType.NEW);
         libraryEventKafkaProducer.sendLibraryEventsForTopic(libraryEvent);
         log.info("###After message sent and it should be called after success message###");
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
@@ -53,10 +53,10 @@ public class LibraryEventsController {
 
     @PutMapping("/update/libraryEvent")
     public ResponseEntity<?> updateLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
-        if (null == libraryEvent.getId()) {
+        if (null == libraryEvent.getLibraryEventId()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Library Event Id shouldn't be null");
         }
-        libraryEvent.setType(LibraryEventType.UPDATE);
+        libraryEvent.setLibraryEventType(LibraryEventType.UPDATE);
         SendResult<Integer, String> sendResult = libraryEventKafkaProducer.sendLibraryEventsSynchronous(libraryEvent);
         log.info("sendResult:{}", sendResult);
         return ResponseEntity.status(HttpStatus.OK).body(libraryEvent);

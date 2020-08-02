@@ -58,12 +58,12 @@ public class LibraryEventsControllerIntegrationTest {
     @BeforeEach
     void setUp() {
         book = Book.builder()
-                .id(123)
+                .bookId(123)
                 .name("aBook")
                 .author("anUnknown")
                 .build();
         libraryEvent = LibraryEvent.builder()
-                .id(null)
+                .libraryEventId(null)
                 .book(book)
                 .build();
         httpHeaders = new HttpHeaders();
@@ -93,7 +93,7 @@ public class LibraryEventsControllerIntegrationTest {
     @Timeout(5)
     void createLibraryEvent() {
         LibraryEvent expectedLibraryEvent = LibraryEvent.builder()
-                .id(null)
+                .libraryEventId(null)
                 .type(LibraryEventType.NEW)
                 .book(book)
                 .build();
@@ -118,7 +118,7 @@ public class LibraryEventsControllerIntegrationTest {
     @Timeout(5)
     void createLibraryEventSynchronous() throws InterruptedException {
         LibraryEvent libraryEvent = LibraryEvent.builder()
-                .id(null)
+                .libraryEventId(null)
                 .type(LibraryEventType.NEW)
                 .book(book)
                 .build();
@@ -140,7 +140,7 @@ public class LibraryEventsControllerIntegrationTest {
     @Timeout(5)
     void createLibraryEventForTopic() throws InterruptedException {
         LibraryEvent libraryEvent = LibraryEvent.builder()
-                .id(null)
+                .libraryEventId(null)
                 .type(LibraryEventType.NEW)
                 .book(book)
                 .build();
@@ -162,7 +162,7 @@ public class LibraryEventsControllerIntegrationTest {
     @Timeout(5)
     void updateLibraryEvent() {
         LibraryEvent libraryEvent = LibraryEvent.builder()
-                .id(123)
+                .libraryEventId(123)
                 .type(LibraryEventType.UPDATE)
                 .book(book)
                 .build();
@@ -184,7 +184,7 @@ public class LibraryEventsControllerIntegrationTest {
     @Timeout(5)
     void updateLibraryEvent_nullId() {
         LibraryEvent libraryEvent = LibraryEvent.builder()
-                .id(null)
+                .libraryEventId(null)
                 .type(LibraryEventType.UPDATE)
                 .book(book)
                 .build();

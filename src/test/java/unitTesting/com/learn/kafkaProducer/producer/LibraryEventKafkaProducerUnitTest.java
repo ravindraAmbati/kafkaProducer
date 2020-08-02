@@ -54,12 +54,12 @@ class LibraryEventKafkaProducerUnitTest {
     void setUp() {
 
         book = Book.builder()
-                .id(123)
+                .bookId(123)
                 .name("aBook")
                 .author("anUnknown")
                 .build();
         libraryEvent = LibraryEvent.builder()
-                .id(null)
+                .libraryEventId(null)
                 .book(book)
                 .build();
     }
@@ -92,7 +92,7 @@ class LibraryEventKafkaProducerUnitTest {
     @Test
     void sendLibraryEventsForTopic_onFailure() throws JsonProcessingException {
         SettableListenableFuture<SendResult<Integer, String>> listenableFuture = new SettableListenableFuture<>();
-        Integer key = libraryEvent.getId();
+        Integer key = libraryEvent.getLibraryEventId();
         String value = objectMapper.writeValueAsString(libraryEvent);
         listenableFuture.setException(new RuntimeException("Exception caused by kafka"));
         ProducerRecord<Integer, String> producerRecord = new ProducerRecord<Integer, String>("test-topic", key, value);
@@ -103,7 +103,7 @@ class LibraryEventKafkaProducerUnitTest {
     @Test
     void sendLibraryEvents_onSuccess() throws JsonProcessingException {
         SettableListenableFuture<SendResult<Integer, String>> listenableFuture = new SettableListenableFuture<>();
-        Integer key = libraryEvent.getId();
+        Integer key = libraryEvent.getLibraryEventId();
         String value = objectMapper.writeValueAsString(libraryEvent);
         ProducerRecord<Integer, String> producerRecord = new ProducerRecord<Integer, String>("test-topic", key, value);
         TopicPartition topicPartition = new TopicPartition("test-topic", 3);
@@ -117,7 +117,7 @@ class LibraryEventKafkaProducerUnitTest {
     @Test
     void sendLibraryEventsSynchronous_onSuccess() throws JsonProcessingException, ExecutionException, InterruptedException {
         SettableListenableFuture<SendResult<Integer, String>> listenableFuture = new SettableListenableFuture<>();
-        Integer key = libraryEvent.getId();
+        Integer key = libraryEvent.getLibraryEventId();
         String value = objectMapper.writeValueAsString(libraryEvent);
         ProducerRecord<Integer, String> producerRecord = new ProducerRecord<Integer, String>("test-topic", key, value);
         TopicPartition topicPartition = new TopicPartition("test-topic", 3);
@@ -131,7 +131,7 @@ class LibraryEventKafkaProducerUnitTest {
     @Test
     void sendLibraryEventsForTopic_onSuccess() throws JsonProcessingException {
         SettableListenableFuture<SendResult<Integer, String>> listenableFuture = new SettableListenableFuture<>();
-        Integer key = libraryEvent.getId();
+        Integer key = libraryEvent.getLibraryEventId();
         String value = objectMapper.writeValueAsString(libraryEvent);
         String topic = "library-event";
         List<Header> headers = List.of(new RecordHeader(topic, "book-barcode-reading".getBytes()));

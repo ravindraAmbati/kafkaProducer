@@ -42,13 +42,13 @@ public class LibraryEventsControllerUnitTest {
     void setUp() throws JsonProcessingException {
 
         book = Book.builder()
-                .id(123)
+                .bookId(123)
                 .name("aBook")
                 .author("anUnknown")
                 .build();
         emptyBookBuilder = Book.builder();
         libraryEvent = LibraryEvent.builder()
-                .id(null)
+                .libraryEventId(null)
                 .book(book)
                 .build();
         emptyLibraryEventBuilder = LibraryEvent.builder();
@@ -113,7 +113,7 @@ public class LibraryEventsControllerUnitTest {
     void updateLibraryEvent() throws Exception {
 
         libraryEvent = LibraryEvent.builder()
-                .id(999)
+                .libraryEventId(999)
                 .book(book)
                 .build();
         libraryEventJson = objectMapper.writeValueAsString(libraryEvent);
@@ -151,7 +151,7 @@ public class LibraryEventsControllerUnitTest {
     @Test
     void createLibraryEventForTopic_4xx() throws Exception {
 
-        emptyLibraryEventJson = objectMapper.writeValueAsString(emptyLibraryEventBuilder.book(emptyBookBuilder.id(123).build()).build());
+        emptyLibraryEventJson = objectMapper.writeValueAsString(emptyLibraryEventBuilder.book(emptyBookBuilder.bookId(123).build()).build());
         mockMvc.perform(
                 post("/create/libraryEvent/topic").content(emptyLibraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
