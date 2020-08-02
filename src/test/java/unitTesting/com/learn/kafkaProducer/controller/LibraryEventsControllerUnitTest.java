@@ -134,7 +134,7 @@ public class LibraryEventsControllerUnitTest {
                 post("/create/libraryEvent").content(emptyLibraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
                 status().is4xxClientError()
-        ).andExpect(content().string("book.id: must not be null || book.name: must not be blank"));
+        ).andExpect(content().string("book.bookId: must not be null || book.name: must not be blank"));
     }
 
     @Test
@@ -145,7 +145,7 @@ public class LibraryEventsControllerUnitTest {
                 post("/create/libraryEvent/waitForResponse").content(emptyLibraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
                 status().is4xxClientError()
-        ).andExpect(content().string("book.author: must not be blank || book.id: must not be null"));
+        ).andExpect(content().string("book.author: must not be blank || book.bookId: must not be null"));
     }
 
     @Test

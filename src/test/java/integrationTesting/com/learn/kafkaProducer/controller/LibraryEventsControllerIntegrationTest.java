@@ -97,7 +97,7 @@ public class LibraryEventsControllerIntegrationTest {
                 .libraryEventType(LibraryEventType.NEW)
                 .book(book)
                 .build();
-        String expectedConsumerRecord = "{\"id\":null,\"type\":\"NEW\",\"book\":{\"id\":123,\"name\":\"aBook\",\"author\":\"anUnknown\"}}";
+        String expectedConsumerRecord = "{\"libraryEventId\":null,\"libraryEventType\":\"NEW\",\"book\":{\"bookId\":123,\"name\":\"aBook\",\"author\":\"anUnknown\"}}";
         ResponseEntity<LibraryEvent> expectedResponseEntity = new ResponseEntity<>(expectedLibraryEvent, httpHeaders, HttpStatus.CREATED);
         //given
         requestEntity = new RequestEntity<>(libraryEvent, HttpMethod.POST, URI.create("/create/libraryEvent"));
