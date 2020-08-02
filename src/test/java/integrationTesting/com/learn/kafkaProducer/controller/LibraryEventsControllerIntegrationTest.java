@@ -183,13 +183,18 @@ public class LibraryEventsControllerIntegrationTest {
     @Test
     @Timeout(5)
     void updateLibraryEvent_nullId() {
+        book = Book.builder()
+                .bookId(null)
+                .name("aBook")
+                .author("anUnknown")
+                .build();
         LibraryEvent libraryEvent = LibraryEvent.builder()
                 .libraryEventId(null)
                 .libraryEventType(LibraryEventType.UPDATE)
                 .book(book)
                 .build();
 
-        ResponseEntity<?> expectedResponseEntity = new ResponseEntity<>("Library Event Id shouldn't be null", httpHeaders, HttpStatus.BAD_REQUEST);
+        ResponseEntity<?> expectedResponseEntity = new ResponseEntity<>("Book Id shouldn't be null", httpHeaders, HttpStatus.BAD_REQUEST);
         //given
         requestEntity = new RequestEntity<>(libraryEvent, HttpMethod.PUT, URI.create("/update/libraryEvent"));
         //when

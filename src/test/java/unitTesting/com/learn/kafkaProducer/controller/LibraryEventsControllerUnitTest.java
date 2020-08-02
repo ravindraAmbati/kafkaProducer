@@ -101,12 +101,21 @@ public class LibraryEventsControllerUnitTest {
 
     @Test
     void updateLibraryEvent_null() throws Exception {
-
+        book = Book.builder()
+                .bookId(null)
+                .name("aBook")
+                .author("anUnknown")
+                .build();
+        libraryEvent = LibraryEvent.builder()
+                .libraryEventId(null)
+                .book(book)
+                .build();
+        libraryEventJson = objectMapper.writeValueAsString(libraryEvent);
         mockMvc.perform(
                 put("/update/libraryEvent").content(libraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
                 status().isBadRequest()
-        ).andExpect(content().string("Library Event Id shouldn't be null"));
+        ).andExpect(content().string("Book Id shouldn't be null"));
     }
 
     @Test
@@ -134,7 +143,7 @@ public class LibraryEventsControllerUnitTest {
                 post("/create/libraryEvent").content(emptyLibraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
                 status().is4xxClientError()
-        ).andExpect(content().string("book.bookId: must not be null || book.name: must not be blank"));
+        ).andExpect(content().string("book.name: must not be blank"));
     }
 
     @Test
@@ -145,7 +154,7 @@ public class LibraryEventsControllerUnitTest {
                 post("/create/libraryEvent/waitForResponse").content(emptyLibraryEventJson).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
                 status().is4xxClientError()
-        ).andExpect(content().string("book.author: must not be blank || book.bookId: must not be null"));
+        ).andExpect(content().string("book.author: must not be blank"));
     }
 
     @Test

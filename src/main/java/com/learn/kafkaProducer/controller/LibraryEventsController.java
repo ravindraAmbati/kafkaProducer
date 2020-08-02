@@ -53,8 +53,8 @@ public class LibraryEventsController {
 
     @PutMapping("/update/libraryEvent")
     public ResponseEntity<?> updateLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
-        if (null == libraryEvent.getLibraryEventId()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Library Event Id shouldn't be null");
+        if (null == libraryEvent.getBook().getBookId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book Id shouldn't be null");
         }
         libraryEvent.setLibraryEventType(LibraryEventType.UPDATE);
         SendResult<Integer, String> sendResult = libraryEventKafkaProducer.sendLibraryEventsSynchronous(libraryEvent);
