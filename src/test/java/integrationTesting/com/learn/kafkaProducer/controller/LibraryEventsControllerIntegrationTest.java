@@ -94,7 +94,7 @@ public class LibraryEventsControllerIntegrationTest {
     void createLibraryEvent() {
         LibraryEvent expectedLibraryEvent = LibraryEvent.builder()
                 .libraryEventId(null)
-                .type(LibraryEventType.NEW)
+                .libraryEventType(LibraryEventType.NEW)
                 .book(book)
                 .build();
         String expectedConsumerRecord = "{\"id\":null,\"type\":\"NEW\",\"book\":{\"id\":123,\"name\":\"aBook\",\"author\":\"anUnknown\"}}";
@@ -119,7 +119,7 @@ public class LibraryEventsControllerIntegrationTest {
     void createLibraryEventSynchronous() throws InterruptedException {
         LibraryEvent libraryEvent = LibraryEvent.builder()
                 .libraryEventId(null)
-                .type(LibraryEventType.NEW)
+                .libraryEventType(LibraryEventType.NEW)
                 .book(book)
                 .build();
 
@@ -141,7 +141,7 @@ public class LibraryEventsControllerIntegrationTest {
     void createLibraryEventForTopic() throws InterruptedException {
         LibraryEvent libraryEvent = LibraryEvent.builder()
                 .libraryEventId(null)
-                .type(LibraryEventType.NEW)
+                .libraryEventType(LibraryEventType.NEW)
                 .book(book)
                 .build();
 
@@ -163,7 +163,7 @@ public class LibraryEventsControllerIntegrationTest {
     void updateLibraryEvent() {
         LibraryEvent libraryEvent = LibraryEvent.builder()
                 .libraryEventId(123)
-                .type(LibraryEventType.UPDATE)
+                .libraryEventType(LibraryEventType.UPDATE)
                 .book(book)
                 .build();
 
@@ -185,7 +185,7 @@ public class LibraryEventsControllerIntegrationTest {
     void updateLibraryEvent_nullId() {
         LibraryEvent libraryEvent = LibraryEvent.builder()
                 .libraryEventId(null)
-                .type(LibraryEventType.UPDATE)
+                .libraryEventType(LibraryEventType.UPDATE)
                 .book(book)
                 .build();
 
