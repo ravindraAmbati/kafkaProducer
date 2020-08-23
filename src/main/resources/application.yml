@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: secure
 ---
 spring:
   profiles: local
@@ -21,3 +21,28 @@ spring:
     admin:
       properties:
         bootstrap.servers: localhost:9092,localhost:9093,localhost:9094
+---
+spring:
+  profiles: secure
+  local:
+    kafka:
+      topic: local-library-events
+  kafka:
+    template:
+      default-topic: default-library-events
+    producer:
+      bootstrap-servers: localhost:7092,localhost:7093,localhost:7094
+      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      ssl:
+        trust-store-location: file:src/main/resources/client.truststore.jks
+        trust-store-password: kafka!2020
+        key-store-location: file:src/main/resources/client.keystore.jks
+        key-store-password: kafka!2020
+      properties:
+        acks: all
+        retries: 9
+        retry.backoff.ms: 1000
+        security:
+          protocol: SSL
+        ssl.endpoint.identification.algorithm:
