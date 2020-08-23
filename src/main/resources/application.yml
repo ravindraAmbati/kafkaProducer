@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: secure
+    active: local
 ---
 spring:
   profiles: local
